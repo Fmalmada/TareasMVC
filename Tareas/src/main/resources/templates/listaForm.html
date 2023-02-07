@@ -21,15 +21,22 @@
 		</tr>
 	</table>
 
-	<form method="post" >
-		<label for="descripcion">Descripcion:</label> <input type="text" id="descripcion"
-			name="descripcion"><br>
-			    <div th:each="prioridad: ${prioridades}" >
-      <input type="radio" id="${prioridad}" th:name="prioridad" th:value="${prioridad}"
-             ><label th:for="${prioridad}" th:text="${prioridad}" ></label>
+	<form method="post" th:object="${tarea}">
+		<div>
+			<label for="descripcion">Descripcion</label> <input type="text"
+				th:field="*{descripcion}" id="descripcion"> <span
+				th:if="${#fields.hasErrors('descripcion')}" class="validationsError"
+				th:errors="*{descripcion}">Necesita descripción</span>
+		</div>
 
-    </div>
-		
+		<div th:each="prioridad: ${prioridades}">
+			<label th:for="${prioridad}" th:text="${prioridad}"></label> <input
+				type="radio" th:field="*{prioridad}" th:value="${prioridad}">
+			<span class="validationsError" th:if="${#fields.hasErrors('prioridad')}"
+				 th:errors="*{prioridad}">Necesita
+				prioridad</span>
+		</div>
+
 		<br> <input type="submit" value="Agregar">
 	</form>
 </body>
