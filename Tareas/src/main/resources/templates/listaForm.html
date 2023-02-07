@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http:/ /www.w3.org/1999/xhtml"
+	xmlns:th="http:/ /www.thymeleaf.org">
+<head>
+<title>Lista de tareas</title>
+</head>
+<body>
+	<h1>Tareas</h1>
+	<table>
+		<thead>
+			<tr>
+				<th>Descripcion</th>
+				<th>Creada en</th>
+				<th>Prioridad</th>
+			</tr>
+		</thead>
+		<tr th:each="tarea: ${tareas}">
+			<td th:text="${tarea.descripcion}"></td>
+			<td th:text="${tarea.creadaEn}"></td>
+			<td th:text="${tarea.prioridad}"></td>
+		</tr>
+	</table>
+
+	<form method="post" >
+		<label for="descripcion">Descripcion:</label> <input type="text" id="descripcion"
+			name="descripcion"><br>
+			    <div th:each="prioridad: ${prioridades}" >
+      <input type="radio" id="${prioridad}" th:name="prioridad" th:value="${prioridad}"
+             ><label th:for="${prioridad}" th:text="${prioridad}" ></label>
+
+    </div>
+		
+		<br> <input type="submit" value="Agregar">
+	</form>
+</body>
+</html>
