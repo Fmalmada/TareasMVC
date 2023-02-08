@@ -24,16 +24,16 @@ import com.Tareas.modelo.Tarea;
 @Controller
 
 public class TareasController {
-	
+
 	@Autowired
 	private TareasRepository tareasRepo;
-	
+
 	ModelAndView modelo;
 
 	public TareasController(TareasRepository unRepo) {
 		this.tareasRepo = unRepo;
 	}
-	
+
 	@GetMapping("/")
 	public ModelAndView tareas(Tarea unaTarea) {
 		modelo = new ModelAndView("listaForm");
@@ -42,9 +42,10 @@ public class TareasController {
 		modelo.addObject("tarea", unaTarea);
 		return modelo;
 	}
-	
+
 	@PostMapping("/")
-	public String agregarTarea(@Valid @ModelAttribute("tarea") Tarea nuevaTarea, BindingResult resultados, Errors errores, Model unModelo) {
+	public String agregarTarea(@Valid @ModelAttribute("tarea") Tarea nuevaTarea, BindingResult resultados,
+			Errors errores, Model unModelo) {
 		if (errores.hasErrors()) {
 			unModelo.addAttribute("tareas", tareasRepo.findAll());
 			unModelo.addAttribute("prioridades", Tarea.Prioridad.values());
@@ -53,11 +54,11 @@ public class TareasController {
 		tareasRepo.save(nuevaTarea);
 		return "redirect:/";
 	}
-	
+
 	@GetMapping("/editar/{id}")
 	public String EditarTarea(@PathVariable("id") Long unaTareaId, Model unModelo) {
 		Optional<Tarea> posibleTarea = tareasRepo.findById(unaTareaId);
-		if (!posibleTarea.isPresent() ) {
+		if (!posibleTarea.isPresent()) {
 			throw new IllegalArgumentException("Tarea: " + unaTareaId + " no encontrada");
 		}
 		unModelo.addAttribute("tareaAEditar", posibleTarea.get());
@@ -65,10 +66,12 @@ public class TareasController {
 		unModelo.addAttribute("prioridades", Tarea.Prioridad.values());
 		return "editar-tarea";
 	}
-	
+
 	@PostMapping("/editar/{id}")
-	public String AgregarTareaEditada(@PathVariable("id") Long unaTareaId, @Valid @ModelAttribute("tareaAEditar") Tarea tareaAEditar, BindingResult resultados, Model unModelo, Errors errores) {
-		
+	public String AgregarTareaEditada(@PathVariable("id") Long unaTareaId,
+			@Valid @ModelAttribute("tareaAEditar") Tarea tareaAEditar, BindingResult resultados, Model unModelo,
+			Errors errores) {
+
 		if (errores.hasErrors() || resultados.hasErrors()) {
 			unModelo.addAttribute("tarea", new Tarea());
 			unModelo.addAttribute("prioridades", Tarea.Prioridad.values());
@@ -78,26 +81,23 @@ public class TareasController {
 		tareasRepo.save(tareaAEditar);
 		return "redirect:/";
 	}
-	
+
 	@GetMapping("/eliminar/{id}")
 	public String eliminarTarea(@PathVariable("id") Long unaTareaId, Model unModelo) {
 		Optional<Tarea> posibleTarea = tareasRepo.findById(unaTareaId);
-		if (!posibleTarea.isPresent() ) {
+		if (!posibleTarea.isPresent()) {
 			throw new IllegalArgumentException("Tarea: " + unaTareaId + " no encontrada");
 		}
-		
+
 		tareasRepo.deleteById(unaTareaId);
 		return "redirect:/";
-		
+
 	}
-	
+
 	public ModelAndView cargarDatos(ModelAndView unModelo) {
 		unModelo.addObject("tareas", tareasRepo.findAll());
 		unModelo.addObject("prioridades", Tarea.Prioridad.values());
 		return unModelo;
 	}
-	
-	
+
 }
-
-
