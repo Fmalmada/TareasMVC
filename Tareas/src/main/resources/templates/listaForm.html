@@ -29,6 +29,7 @@
 				th:errors="*{descripcion}">Necesita descripción</span>
 		</div>
 
+		<span>Prioridad:</span>
 		<div th:each="prioridad: ${prioridades}">
 			<label th:for="${prioridad}" th:text="${prioridad}"></label> <input
 				type="radio" th:field="*{prioridad}" th:value="${prioridad}">
