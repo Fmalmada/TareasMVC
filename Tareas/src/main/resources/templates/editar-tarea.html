@@ -5,7 +5,7 @@ xmlns:th="http:/ /www.thymeleaf.org">
 		<title>Editar tarea</title>
 	</head>
 	<body>
-		<form method="post" th:object="${tarea}" th:action="@{/editar/{id}(id=${tareaAEditar.id})}">
+		<form method="post" th:object="${tareaAEditar}" th:action="@{/editar/{id}(id=${tareaAEditar.id})}">
 		<div>
 			<label for="descripcion">Descripcion</label> <input type="text"
 				th:field="*{descripcion}" id="descripcion" 
