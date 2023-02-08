@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http:/ /www.w3.org/1999/xhtml"
+xmlns:th="http:/ /www.thymeleaf.org">
+	<head>
+		<title>Editar tarea</title>
+	</head>
+	<body>
+		<form method="post" th:object="${tarea}" th:action="@{/editar/{id}(id=${tareaAEditar.id})}">
+		<div>
+			<label for="descripcion">Descripcion</label> <input type="text"
+				th:field="*{descripcion}" id="descripcion" 
+				th:placeholder="${tareaAEditar.descripcion}"> <span
+				th:if="${#fields.hasErrors('descripcion')}" class="validationsError"
+				th:errors="*{descripcion}">Necesita descripción</span>
+		</div>
+
+		<span>Prioridad:</span>
+		<div th:each="prioridad: ${prioridades}">
+			<label th:for="${prioridad}" th:text="${prioridad}"></label> <input
+				type="radio" th:field="*{prioridad}" th:value="${prioridad}">
+			<span class="validationsError" th:if="${#fields.hasErrors('prioridad')}"
+				 th:errors="*{prioridad}">Necesita
+				prioridad</span>
+		</div>
+
+		<br> <input type="submit" value="Editar">
+		</form>
+	</body>
+</html>

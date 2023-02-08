@@ -12,12 +12,17 @@
 				<th>Descripcion</th>
 				<th>Creada en</th>
 				<th>Prioridad</th>
+				<th>Acciones</th>
 			</tr>
 		</thead>
 		<tr th:each="tarea: ${tareas}">
 			<td th:text="${tarea.descripcion}"></td>
 			<td th:text="${tarea.creadaEn}"></td>
 			<td th:text="${tarea.prioridad}"></td>
+			<td>
+				<a th:href="@{/editar/{id}(id=${tarea.id})}">Editar</a>
+				<a th:href="@{/eliminar/{id}(id=${tarea.id})}">Eliminar</a>
+			</td>
 		</tr>
 	</table>
 

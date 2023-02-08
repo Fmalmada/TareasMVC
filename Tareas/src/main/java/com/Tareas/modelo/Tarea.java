@@ -23,7 +23,7 @@ public class Tarea {
 	@NotNull(message="Se necesita una prioridad")
 	private Prioridad prioridad;
 	
-	@NotNull
+	@NotNull(message = "Una descripción es requerida")
 	@NotBlank(message = "Una descripcion es requerida")
 	private String descripcion;
 	

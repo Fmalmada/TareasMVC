@@ -1,5 +1,7 @@
 package com.Tareas.controller;
 
+import java.util.Optional;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -50,10 +53,31 @@ public class TareasController {
 		return "redirect:/";
 	}
 	
-	@GetMapping("/tareas/{id}")
-	public String EditarTarea(@PathVariable("tareaId") Long unaTareaId) {
-		return null;	
+	@GetMapping("/editar/{id}")
+	public String EditarTarea(@PathVariable("id") Long unaTareaId, Model unModelo) {
+		Optional<Tarea> posibleTarea = tareasRepo.findById(unaTareaId);
+		if (!posibleTarea.isPresent() ) {
+			throw new IllegalArgumentException("Tarea: " + unaTareaId + " no encontrada");
+		}
+		unModelo.addAttribute("tareaAEditar", posibleTarea.get());
+		unModelo.addAttribute("tarea", new Tarea());
+		unModelo.addAttribute("prioridades", Tarea.Prioridad.values());
+		return "editar-tarea";
 	}
+	
+	@PostMapping("/editar/{id}")
+	public String AgregarTareaEditada(@PathVariable("id") Long unaTareaId, @Valid @ModelAttribute("tareaAEditar") Tarea tareaAEditar, BindingResult resultados, Model unModelo, Errors errores) {
+		
+		if (errores.hasErrors() || resultados.hasErrors()) {
+			unModelo.addAttribute("tarea", new Tarea());
+			unModelo.addAttribute("prioridades", Tarea.Prioridad.values());
+			unModelo.addAttribute("tareas", tareasRepo.findAll());
+			return "editar-tarea";
+		}
+		tareasRepo.save(tareaAEditar);
+		return "redirect:/";
+	}
+	
 	
 	public ModelAndView cargarDatos(ModelAndView unModelo) {
 		unModelo.addObject("tareas", tareasRepo.findAll());
