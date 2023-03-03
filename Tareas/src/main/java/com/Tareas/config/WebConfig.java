@@ -12,22 +12,7 @@ import com.Tareas.modelo.Tarea;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-	@Bean
-	public CommandLineRunner dataLoader(TareasRepository tareasRepo) {
-		return args -> {
-			Tarea ejemploTarea = new Tarea();
-			ejemploTarea.setDescripcion("una tarea de ejemplo");
-			ejemploTarea.setPrioridad(Tarea.Prioridad.ALTA);
-
-			Tarea otroEjemploTarea = new Tarea();
-			otroEjemploTarea.setDescripcion("otra tarea de ejemplo");
-			otroEjemploTarea.setPrioridad(Tarea.Prioridad.BAJA);
-
-			tareasRepo.save(ejemploTarea);
-			tareasRepo.save(otroEjemploTarea);
-		};
-	}
-
+	
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
 		registry.addViewController("/login");

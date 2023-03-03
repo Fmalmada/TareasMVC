@@ -5,6 +5,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,7 +20,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.Tareas.data.TareasRepository;
+import com.Tareas.data.UserRepository;
 import com.Tareas.modelo.Tarea;
+import com.Tareas.modelo.Usuario;
 
 @Controller
 
@@ -27,17 +30,22 @@ public class TareasController {
 
 	@Autowired
 	private TareasRepository tareasRepo;
+	
+	@Autowired
+	private UserRepository userRepo;
 
 	ModelAndView modelo;
 
-	public TareasController(TareasRepository unRepo) {
+	public TareasController(TareasRepository unRepo, UserRepository userRepo) {
 		this.tareasRepo = unRepo;
+		this.userRepo = userRepo;
 	}
 
 	@GetMapping("/")
-	public ModelAndView tareas(Tarea unaTarea) {
+	public ModelAndView tareas(Tarea unaTarea, Authentication authentication) {
+		Usuario usuario = (Usuario) authentication.getPrincipal();
 		modelo = new ModelAndView("listaForm");
-		modelo.addObject("tareas", tareasRepo.findAll());
+		modelo.addObject("tareas", usuario.getTareas());
 		modelo.addObject("prioridades", Tarea.Prioridad.values());
 		modelo.addObject("tarea", unaTarea);
 		return modelo;
@@ -45,12 +53,15 @@ public class TareasController {
 
 	@PostMapping("/")
 	public String agregarTarea(@Valid @ModelAttribute("tarea") Tarea nuevaTarea, BindingResult resultados,
-			Errors errores, Model unModelo) {
+			Errors errores, Model unModelo, Authentication authentication) {
 		if (errores.hasErrors()) {
 			unModelo.addAttribute("tareas", tareasRepo.findAll());
 			unModelo.addAttribute("prioridades", Tarea.Prioridad.values());
 			return "listaForm";
 		}
+		Usuario usuario = (Usuario) authentication.getPrincipal();
+		nuevaTarea.setUsuario(usuario);
+		usuario.agregarTarea(nuevaTarea);
 		tareasRepo.save(nuevaTarea);
 		return "redirect:/";
 	}
